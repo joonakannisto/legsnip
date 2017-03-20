@@ -8,13 +8,12 @@ import (
 )
 
 
+http.Handle("/foo", fooHandler)
 
-func HelloServer(w http.ResponseWriter, req *http.Request) {
-    w.Header().Set("Content-Type", "text/plain")
-    w.Write([]byte("This is an example server.\n"))
-    // fmt.Fprintf(w, "This is an example server.\n")
-    // io.WriteString(w, "This is an example server.\n")
-}
+http.HandleFunc("/bar", func(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
+})
+
 
 func main() {
   m := autocert.Manager{
@@ -23,7 +22,7 @@ func main() {
   }
   s := &http.Server{
   	Addr: ":4430",
-    Handler:        HelloServer,
+    Handler:        fooHandler,
   	TLSConfig: &tls.Config{GetCertificate: m.GetCertificate},
   }
     err := s.ListenAndServeTLS(":4430", "")
