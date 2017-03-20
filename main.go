@@ -25,7 +25,7 @@ func main() {
   	HostPolicy: autocert.HostWhitelist("porn.kyber.space"),
   }
   s := &http.Server{
-  	Addr: ":4430",
+  	Addr: "0.0.0.0:4430",
   	TLSConfig: &tls.Config{GetCertificate: m.GetCertificate},
   }
     err := s.ListenAndServeTLS(":4430", "")
