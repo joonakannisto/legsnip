@@ -1,7 +1,7 @@
 package main
 
 import (
-  "github.com/golang/crypto/autocert"
+  "github.com/golang/crypto/acme/autocert"
   "crypto/tls"
   "log"
   "net/http"
