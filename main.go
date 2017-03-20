@@ -28,7 +28,7 @@ func main() {
   	Addr: "0.0.0.0:4430",
   	TLSConfig: &tls.Config{GetCertificate: m.GetCertificate},
   }
-    err := s.ListenAndServeTLS(":4430", "")
+    err := s.ListenAndServeTLS("", "")
     if err != nil {
         log.Fatal("ListenAndServe: ", err)
     }
