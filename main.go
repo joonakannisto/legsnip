@@ -2,33 +2,29 @@ package main
 
 import (
   "github.com/golang/crypto/acme/autocert"
-  "github.com/golang/crypto/tls"
+  "crypto/tls"
   "log"
   "net/http"
-  "fmt"
-  "html"
+  "net/http/httputil"
+  "net/url"
 )
 
-
-
-
-
 func main() {
-
-
-  http.HandleFunc("/bar", func(w http.ResponseWriter, r *http.Request) {
-  	fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
-  })
-
+        proxy := httputil.NewSingleHostReverseProxy(&url.URL{
+                Scheme: "http",
+                Host:   "localhost:80",
+        })
   m := autocert.Manager{
-  	Prompt: autocert.AcceptTOS,
-  	HostPolicy: autocert.HostWhitelist("porn.kyber.space"),
+        Prompt: autocert.AcceptTOS,
+        // Default is allow all :)
+        //HostPolicy: autocert.HostWhitelist("wizard.kyber.space"),
   }
   s := &http.Server{
-  	Addr: "0.0.0.0:4430",
-  	TLSConfig: &tls.Config{GetCertificate: m.GetCertificate},
+        Addr: ":443",
+        Handler: proxy,
+        TLSConfig: &tls.Config{GetCertificate: m.GetCertificate},
   }
-    err := s.ListenAndServeTLS("key.key", "cert.crt")
+    err := s.ListenAndServeTLS("", "")
     if err != nil {
         log.Fatal("ListenAndServe: ", err)
     }
